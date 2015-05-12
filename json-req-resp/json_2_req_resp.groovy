@@ -7,10 +7,10 @@ import groovy.json.JsonSlurper
 basicFileName = this.args[0]
 println(basicFileName)
 // api中要求带的action。 
-requestAction = this.args[1]
-println(requestAction)
+//requestAction = this.args[1]
+//println(requestAction)
 
-responseEntity = this.args[2]
+responseEntity = this.args[1]
 println(responseEntity)
 
 requestName = "${basicFileName}Request"

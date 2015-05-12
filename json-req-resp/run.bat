@@ -1,2 +1,2 @@
-groovy json_2_req_resp.groovy
+groovy json_2_req_resp.groovy QueryOrder OrderDetail
 pause
