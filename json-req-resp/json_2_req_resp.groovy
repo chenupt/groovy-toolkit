@@ -4,13 +4,16 @@ import groovy.json.JsonSlurper
 //========== !!! test2.json里不能带中文 !!! =============
 //========== !!! test2.json里不能带中文 !!! =============
 
-basicFileName = this.args[0]
+jsonName = this.args[0]
+println(jsonName)
+
+basicFileName = this.args[1]
 println(basicFileName)
 // api中要求带的action。 
 //requestAction = this.args[1]
 //println(requestAction)
 
-responseEntity = this.args[1]
+responseEntity = this.args[2]
 println(responseEntity)
 
 requestName = "${basicFileName}Request"
@@ -23,7 +26,7 @@ lineSeparator = System.getProperty("line.separator");
 
 
 //def reader = new FileReader('getAccountInfo.json')
-def reader = new InputStreamReader(new FileInputStream('test.json'), 'UTF-8');
+def reader = new InputStreamReader(new FileInputStream(jsonName), 'UTF-8');
 ajson = new JsonSlurper().parse(reader)
 
 
