@@ -1,0 +1,54 @@
+{"result": {
+        "productDto": {
+            "productName": "保险理财1",
+            "productDays": 50,
+            "productDesc": "远超活期收益，每日收钱，随取随用，持续增值！",
+            "rateName": "",
+            "profitRate": 4.427,
+            "logoUrl": "",
+            "wanfenProfit": "",
+            "productType": "baoxian",
+            "productId": "000002",
+            "investLowLimit": 200,
+            "productTypeId": ""
+         },
+        "detailItems": [
+            {
+                "showName": "期限",
+                "value": "50",
+                "itemType": "text",
+                "order": 0
+            },
+            {
+                "showName": "预期年化收益率",
+                "value": "6.6",
+                "itemType": "text",
+                "order": 1
+            },
+            {
+                "showName": "起购金额",
+                "value": "200",
+                "itemType": "text",
+                "order": 2
+            },
+            {
+                "showName": "产品说明",
+                "value": "业内精品，良心推荐",
+                "itemType": "text",
+                "order": 3
+            },
+            {
+                "showName": "更多详情",
+                "value": null,
+                "itemType": "url",
+                "order": 4
+            }
+        ],
+
+     "buyable": true
+    },
+
+    "appRetcodeEnum": "SUCESS",
+    "retdesc": "操作成功",
+    "retcode": "0000"
+} 
