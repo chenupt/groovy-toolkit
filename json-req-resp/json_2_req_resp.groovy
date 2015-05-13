@@ -92,8 +92,8 @@ def parseJson2ResponseFileContent(){
         if (key.equals("result")){
             type = responseEntity.capitalize()
             key = responseEntity
+            sb<<"\tprivate $type $key;"<<lineSeparator
         }
-        sb<<"\tprivate $type $key;"<<lineSeparator
     }
     sb<<lineSeparator
 
@@ -103,7 +103,9 @@ def parseJson2ResponseFileContent(){
     sb<<"\t\t\ttry{"<<lineSeparator        
     sb<<"\t\t\t\tJSONObject json = new JSONObject(jsonStr);"<<lineSeparator
     ajson.each{key, value ->
-        parse(sb, key, value)
+        if (key.equalsIgnoreCase("result")) {
+            parse(sb, key, value, true)
+        }
     }
     sb<<"\t\t\t} catch (JSONException e) {"<<lineSeparator
     sb<<"\t\t\t\te.printStackTrace();"<<lineSeparator
@@ -113,14 +115,16 @@ def parseJson2ResponseFileContent(){
 
     // getter & setter
     ajson.each{key, value ->
-        key = changeResultKey(key);
-        def type = getTypeFromWholePath(key, value)
-        sb<<"\tpublic $type get${key.capitalize()}() {"<<lineSeparator
-        sb<<"\t\treturn $key;"<<lineSeparator
-        sb<<"\t}"<<lineSeparator
-        sb<<"\tpublic void set${key.capitalize()}($type $key) {"<<lineSeparator
-        sb<<"\t\tthis.$key = $key;"<<lineSeparator
-        sb<<"\t}"<<lineSeparator
+        if (key.equalsIgnoreCase("result")) {
+            key = changeResultKey(key);
+            def type = getTypeFromWholePath(key, value)
+            sb<<"\tpublic $type get${key.capitalize()}() {"<<lineSeparator
+            sb<<"\t\treturn $key;"<<lineSeparator
+            sb<<"\t}"<<lineSeparator
+            sb<<"\tpublic void set${key.capitalize()}($type $key) {"<<lineSeparator
+            sb<<"\t\tthis.$key = $key;"<<lineSeparator
+            sb<<"\t}"<<lineSeparator
+        }
     }
 
     sb<<lineSeparator    
@@ -149,7 +153,7 @@ def writeItemData2File(fkey, fvalue){
     sb2<<"\tpublic ${fkey.capitalize()} (JSONObject json){"<<lineSeparator
     sb2<<"\t\tif(json != null){"<<lineSeparator
     fvalue.each{key, value ->
-        parse(sb2, key, value)
+        parse(sb2, key, value, false)
         // sb2<<"\t\t\tif(!json.isNull(\"${key}\")) ${key} = json.opt${type.capitalize()}(\"${key}\");"<<lineSeparator   
     }
 
@@ -193,7 +197,7 @@ def writeItemData2File(fkey, fvalue){
     write2File("${fkey.capitalize()}.java", sb2)
 }
 
-def parse(sb, key, value){
+def parse(sb, key, value, shouldEditResult){
     def type = getTypeFromWholePath(key, value)
     if (type.startsWith("ArrayList")){
             def subtype = ""
@@ -237,13 +241,20 @@ def parse(sb, key, value){
 
 
         else {
+            def result = key
+            // 是否替换key为result
+            if (shouldEditResult && key.equalsIgnoreCase("result")) {
+                result = "result"       
+            }
+
             key = changeResultKey(key);
             //create the Item's JavaBean
             writeItemData2File(key,value)
 
             //add lines to File
             sb<<lineSeparator
-            sb<<"\t\t\t\tJSONObject sub = json.optJSONObject(\"${key}\");"<<lineSeparator
+            
+            sb<<"\t\t\t\tJSONObject sub = json.optJSONObject(\"$result\");"<<lineSeparator
             if(type.equalsIgnoreCase("result")){
                 type = responseEntity.capitalize()
             }
