@@ -95,10 +95,9 @@ def parseJson2ResponseFileContent(){
 
     sb<<"public class ${responseName} extends BaseResponse {"<<lineSeparator
     ajson.each{key, value ->
-        def type = getTypeFromWholePath(key, value)
         if (key.equals("result")){
-            type = responseEntity.capitalize()
-            key = responseEntity
+            key = responseEntity;
+            def type = getTypeFromWholePath(key, value)
             sb<<"\tprivate $type $key;"<<lineSeparator
         }
     }
@@ -205,6 +204,14 @@ def writeItemData2File(fkey, fvalue){
 }
 
 def parse(sb, key, value, shouldEditResult){
+    def result = key
+    // 是否替换key为result
+    if (shouldEditResult && key.equalsIgnoreCase("result")) {
+        result = "result"       
+    }
+    if (shouldEditResult) {
+        key = responseEntity.capitalize();
+    }
     def type = getTypeFromWholePath(key, value)
     if (type.startsWith("ArrayList")){
             def subtype = ""
@@ -214,7 +221,7 @@ def parse(sb, key, value, shouldEditResult){
             }
 
             sb<<lineSeparator
-            sb<<"\t\t\t\tJSONArray array = json.optJSONArray(\"$key\");"<<lineSeparator
+            sb<<"\t\t\t\tJSONArray array = json.optJSONArray(\"$result\");"<<lineSeparator
                 
             
             //println "subtype = $subtype" 
@@ -230,7 +237,6 @@ def parse(sb, key, value, shouldEditResult){
             } else {
                 //TODO
                 writeItemData2File(subtype, value[0])
-
                 sb<<"\t\t\t\t${key} = ${subtype}.createWithJsonArray(array);"<<lineSeparator
                 sb<<"\t\t\t\t"<<lineSeparator
 
@@ -243,17 +249,12 @@ def parse(sb, key, value, shouldEditResult){
             || type.equals("String") || type.equals("boolean") || type.equals("double")){
             
             type = type.capitalize()
-            sb<<"\t\t\t\tif(!json.isNull(\"${key}\")) $key = json.opt${type}(\"$key\");"<<lineSeparator            
+            sb<<"\t\t\t\tif(!json.isNull(\"${key}\")) $key = json.opt${type}(\"$result\");"<<lineSeparator            
         } 
 
 
         else {
-            def result = key
-            // 是否替换key为result
-            if (shouldEditResult && key.equalsIgnoreCase("result")) {
-                result = "result"       
-            }
-
+            
             key = changeResultKey(key);
             //create the Item's JavaBean
             writeItemData2File(key,value)
