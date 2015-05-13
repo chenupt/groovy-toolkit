@@ -18,7 +18,7 @@ println(responseEntity)
 
 requestName = "${basicFileName}Request"
 parserName  = "${basicFileName}Parser"
-responseName = "${basicFileName}Response"
+responseName = "${basicFileName.capitalize()}Response"
 requestFileName =  "${requestName}.java"
 parserFileName  =  "${parserName}.java"
 responseFileName = "${responseName}.java"
@@ -26,7 +26,7 @@ lineSeparator = System.getProperty("line.separator");
 
 
 //def reader = new FileReader('getAccountInfo.json')
-def reader = new InputStreamReader(new FileInputStream(jsonName), 'UTF-8');
+def reader = new InputStreamReader(new FileInputStream("./json/" + jsonName), 'UTF-8');
 ajson = new JsonSlurper().parse(reader)
 
 
@@ -39,7 +39,13 @@ println '======================================='
 
 
 def write2File(fileFullName, content){
-    def file = new File(basicFileName)
+    def folder = new File(basicFileName)
+    // If it doesn't exist
+    if( !folder.exists() ) {
+      // Create all folders up-to and including B
+      folder.mkdirs()
+    }
+    def file = new File(folder, fileFullName)
     file.withWriter{ Writer writer ->
         writer.append(content)
     }
@@ -69,6 +75,7 @@ def getTypeFromWholePath(key, value){
             return objectType;
             //return 'Object'
     }
+    return 'String';
 }
 
 

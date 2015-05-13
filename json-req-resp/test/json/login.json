@@ -1,0 +1,35 @@
+
+{
+    "result": {
+        "accountId": "sjfund001@163.com",
+        "outAccountId": "2014111220LC00011931",
+        "status": "VERIFY", 
+        "trueName": "褚采珊",
+        "identityNo": "610528197603265964",
+        "mobilePhone": "18857123292",
+        "provinceCode": "500000",
+        "cityCode": "500000",
+        "address": "wangyibao57@163.com",
+        "lastLoginTime": 1430135389966,
+        "ip": "127.0.0.1",
+        "createTime": 1415797083000,
+        "openTime": null,
+        "updateTime": 1421837029118,
+        "syncFlag": "Y",
+        "verifyTime": null,
+        "showAmount": null,
+        "innerId": null,
+        "outId": null,
+        "outAccountType": null,
+        "hasRiskAssessment": true,
+        "riskAssessStyle": "稳健型",
+        "bankCardNum": 8,
+        "guoHuaProvinceStr": "重庆市",
+        "guoHuaCityStr": "重庆市",
+        "anonymousAccountId": "sj****@163.com",
+        "opened": true
+    },
+    "appRetcodeEnum": "SUCESS",
+    "retdesc": "操作成功",
+    "retcode": "0000 "
+}
