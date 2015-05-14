@@ -221,25 +221,25 @@ def parse(sb, key, value, shouldEditResult){
             }
 
             sb<<lineSeparator
-            sb<<"\t\t\t\tJSONArray array = json.optJSONArray(\"$result\");"<<lineSeparator
+            sb<<"\t\t\t\tif(!json.isNull(\"${result}\")) {"<<lineSeparator
+            sb<<"\t\t\t\t\tJSONArray array = json.optJSONArray(\"$result\");"<<lineSeparator
                 
             
             //println "subtype = $subtype" 
             // TODO other type
             if(subtype.equals("long") || subtype.equals("int")
                 || subtype.equals("String") || subtype.equals("boolean") || type.equals("double")){
-                sb<<"\t\t\t\t$key = new $type();"<<lineSeparator
-                sb<<"\t\t\t\tfor(int i = 0; i < array.length(); i++){"<<lineSeparator
-                sb<<"\t\t\t\t\t$subtype asub = ($subtype) array.opt(i);"<<lineSeparator
-                sb<<"\t\t\t\t\t${key}.add(asub);"<<lineSeparator
-                sb<<"\t\t\t\t}"<<lineSeparator
+                sb<<"\t\t\t\t\t$key = new $type();"<<lineSeparator
+                sb<<"\t\t\t\t\tfor(int i = 0; i < array.length(); i++){"<<lineSeparator
+                sb<<"\t\t\t\t\t\t$subtype asub = ($subtype) array.opt(i);"<<lineSeparator
+                sb<<"\t\t\t\t\t\t${key}.add(asub);"<<lineSeparator
+                sb<<"\t\t\t\t\t}"<<lineSeparator
 
             } else {
                 //TODO
                 writeItemData2File(subtype, value[0])
-                sb<<"\t\t\t\t${key} = ${subtype}.createWithJsonArray(array);"<<lineSeparator
-                sb<<"\t\t\t\t"<<lineSeparator
-
+                sb<<"\t\t\t\t\t${key} = ${subtype}.createWithJsonArray(array);"<<lineSeparator
+                sb<<"\t\t\t\t}"<<lineSeparator
             }
 
         } 
@@ -262,11 +262,13 @@ def parse(sb, key, value, shouldEditResult){
             //add lines to File
             sb<<lineSeparator
             
-            sb<<"\t\t\t\tJSONObject sub = json.optJSONObject(\"$result\");"<<lineSeparator
+            sb<<"\t\t\t\tif(!json.isNull(\"${result}\")) {"<<lineSeparator
+            sb<<"\t\t\t\t\tJSONObject sub = json.optJSONObject(\"$result\");"<<lineSeparator
             if(type.equalsIgnoreCase("result")){
                 type = responseEntity.capitalize()
             }
-            sb<<"\t\t\t\t$key = new $type(sub);"<<lineSeparator
+            sb<<"\t\t\t\t\t$key = new $type(sub);"<<lineSeparator
+            sb<<"\t\t\t\t}"<<lineSeparator
             sb<<lineSeparator
         }
 }
