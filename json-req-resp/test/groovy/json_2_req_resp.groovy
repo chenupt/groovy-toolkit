@@ -64,6 +64,8 @@ def getTypeFromWholePath(key, value){
             return 'int';
 		case 'class java.math.BigDecimal':
             return 'double';
+        case 'class java.lang.Long':
+            return 'long';
         case 'class java.util.ArrayList':
             listSubClass = value[0].getClass()
             //println "getType() : ArrayList : listSubClass = $listSubClass"
@@ -124,7 +126,11 @@ def parseJson2ResponseFileContent(){
         if (key.equalsIgnoreCase("result")) {
             key = changeResultKey(key);
             def type = getTypeFromWholePath(key, value)
-            sb<<"\tpublic $type get${key.capitalize()}() {"<<lineSeparator
+            if (type.equals("boolean")) {
+                sb<<"\tpublic $type is${key.capitalize()}() {"<<lineSeparator           
+            } else {
+                sb<<"\tpublic $type get${key.capitalize()}() {"<<lineSeparator           
+            }
             sb<<"\t\treturn $key;"<<lineSeparator
             sb<<"\t}"<<lineSeparator
             sb<<"\tpublic void set${key.capitalize()}($type $key) {"<<lineSeparator
@@ -149,7 +155,7 @@ def writeItemData2File(fkey, fvalue){
     sb2<<"import org.json.JSONObject;"<<lineSeparator
     sb2<<lineSeparator
 
-    sb2<<"public class ${fkey.capitalize()} {"<<lineSeparator
+    sb2<<"public class ${fkey.capitalize()} implements Serializable{"<<lineSeparator
     fvalue.each{key, value ->
         def type = getTypeFromWholePath(key, value)
         sb2<<"\tprivate $type $key;"<<lineSeparator
@@ -188,7 +194,11 @@ def writeItemData2File(fkey, fvalue){
     // getter & setter
     fvalue.each{key, value ->
         def type = getTypeFromWholePath(key, value)
-        sb2<<"\tpublic $type get${key.capitalize()}() {"<<lineSeparator
+        if (type.equals("boolean")) {
+            sb2<<"\tpublic $type is${key.capitalize()}() {"<<lineSeparator           
+        } else {
+            sb2<<"\tpublic $type get${key.capitalize()}() {"<<lineSeparator           
+        }
         sb2<<"\t\treturn $key;"<<lineSeparator
         sb2<<"\t}"<<lineSeparator
         sb2<<"\tpublic void set${key.capitalize()}($type $key) {"<<lineSeparator
@@ -210,7 +220,7 @@ def parse(sb, key, value, shouldEditResult){
         result = "result"       
     }
     if (shouldEditResult) {
-        key = responseEntity.capitalize();
+        key = responseEntity;
     }
     def type = getTypeFromWholePath(key, value)
     if (type.startsWith("ArrayList")){
